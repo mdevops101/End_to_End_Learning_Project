@@ -1,37 +1,15 @@
+version: "3.8"
+
 services:
-  backend:
-    build:
-      context: ./backend
+  flask_service:
+    container_name: Flask_Container
+    restart: always
+    build: ./backend
     ports:
       - "5000:5000"
-    environment:
-      FLASK_APP: app.py
-      MYSQL_HOST: db
-      MYSQL_PORT: 3306
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root123
-      MYSQL_DATABASE: mydatabase
-    depends_on:
-      - db
-    restart: always  # Restart policy
-
-  frontend:
-    build:
-      context: ./frontend
-    ports:
-      - "3000:3000"
-    restart: always  # Restart policy
-
-  db:
-    image: mysql:8.0
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: root123
-      MYSQL_DATABASE: mydatabase
     volumes:
-      - db_data:/var/lib/mysql
-    restart: always  # Restart policy
+      - ./backend:/app # Mount the backend directory on the host to /app in the container
 
-volumes:
-  db_data:
+  react_service:
+    container_name: React_Container
+    restart: always
