@@ -75,6 +75,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i <(echo "$SSH_PRIVATE_KEY") osboxes@192.168.0.125 <<EOF
           docker pull juttmusawar/backend-app:latest
           docker pull juttmusawar/frontend-app:latest
-          cd /path/to/docker-compose-directory
+          cd /home/osboxes/project_testing/github_action_cicd_pipeline
           docker-compose up -d
           EOF
