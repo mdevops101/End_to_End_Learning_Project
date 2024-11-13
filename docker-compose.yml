@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # Frontend React app
+  frontend:
+    build:
+      context: ./End_to_End_Frontend  # React app directory path
+    container_name: react-frontend
+    ports:
+      - "3000:3000"  # Expose React app on port 3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true  # Fix for file watching issue in Docker
+    restart: always  # Restart container automatically if it crashes
+
+  # Backend Flask app
+  backend:
+    build:
+      context: ./end_to_end_Backend  # Flask app directory path
+    container_name: flask-backend
+    ports:
+      - "5000:5000"  # Expose Flask app on port 5000
+    environment:
+      - FLASK_APP=app.py  # Set the Flask application to app.py
+      - FLASK_ENV=development  # Optionally set Flask to development mode
+    depends_on:
+      - db  # Ensure db service is started before backend
+    restart: always  # Restart container automatically if it crashes
+
+  # PostgreSQL database
+  db:
+    image: postgres:13  # Use official PostgreSQL image
+    container_name: flask-db
+    environment:
+      - POSTGRES_USER=flaskuser  # Set database user
+      - POSTGRES_PASSWORD=flaskpassword  # Set database password
+      - POSTGRES_DB=flaskdb  # Set database name
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persistent volume for PostgreSQL data
+    ports:
+      - "5432:5432"  # Expose PostgreSQL default port
+    restart: always  # Restart container automatically if it crashes
+
+# Define persistent volume for database data
+volumes:
+  postgres_data:
+    driver: local
+
